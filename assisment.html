@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz App</title>
+  <style>
+    *{
+        margin-left: 5%;
+        padding: 0%;
+        box-sizing: border-box;
+        background-color: rgb(250, 250, 250);
+        align-items: center
+        ;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .option {
+      margin-bottom: 10px;
+    }
+    .correct {
+      color: rgb(113, 113, 244);
+    }
+    .wrong {
+      color: red;
+    }
+    .submit-button {
+      background-color: lightblue;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz">
+    <!-- Questions and options will be dynamically generated here -->
+  </div>
+
+  <script>
+    
+    const quizData = [
+      {
+        question: 'Question 1: Retail promotion is a strategy to?',
+        options: [
+          { value: '1', text: 'Increase sales', correct: false },
+          { value: '2', text: 'Increase Demand', correct: false },
+          { value: '3', text: 'Both A & B', correct: true },
+          { value: '4', text: 'None of these', correct: false }
+        ]
+      },
+      {
+        question: 'Question 1: Retail promotion is a strategy to?',
+        options: [
+          { value: '1', text: 'Increase sales', correct: false },
+          { value: '2', text: 'Increase Demand', correct: false },
+          { value: '3', text: 'Both A & B', correct: true },
+          { value: '4', text: 'None of these', correct: false }
+        ]
+      },
+      {
+        question: 'Question 2: The Application used to manage various promotion schema is called______ ',
+        options: [
+          { value: '1', text: 'Promotion Amplifier', correct: false },
+          { value: '2', text: 'Retail Promotion Engine', correct: false },
+          { value: '3', text: 'Enterprise Promotion Engine', correct: false},
+          { value: '4', text: 'Central Promotion Engine', correct: true }
+        ]
+      },
+      {
+        question: 'Question 3: How many unique promotion types are inbuilt in CPE',
+        options: [
+          { value: '1', text: '18', correct: true },
+          { value: '2', text: '20', correct: false },
+          { value: '3', text: '19', correct: false },
+          { value: '4', text: '21', correct: false }
+        ]
+      },
+      {
+        question: 'Question 4: Which menu to go to for Resending promotion to SAP ?',
+        options: [
+          { value: '1', text: 'Home -> Promotion -> Resend to SAP ', correct: false },
+          { value: '2', text: 'Setting -> Resend Promotion to SAP', correct: true },
+          { value: '3', text: 'Report -> Promotion list -> Send Promotion to SAP', correct: false }
+        
+        ]
+      },
+      {
+        question: 'Question 5: In Which menu can you find Criteria for downloading promotion ?',
+        options: [
+          { value: '1', text: 'Home', correct: false },
+          { value: '2', text: 'Report', correct: false },
+          { value: '3', text: 'FAQs', correct: true},
+          { value: '4', text: 'My Profile', correct: false }
+        ]
+      },
+      
+    ];
+
+    function generateQuiz() {
+      const quizContainer = document.getElementById('quiz');
+
+      quizData.forEach((quizItem, index) => {
+        const questionContainer = document.createElement('div');
+        questionContainer.classList.add('question');
+
+        const questionTitle = document.createElement('h3');
+        questionTitle.textContent = quizItem.question;
+        questionContainer.appendChild(questionTitle);
+
+        quizItem.options.forEach(option => {
+          const optionContainer = document.createElement('div');
+          optionContainer.classList.add('option');
+
+          const optionInput = document.createElement('input');
+          optionInput.type = 'radio';
+          optionInput.name = `q${index}`;
+          optionInput.value = option.value;
+          optionInput.dataset.correct = option.correct;
+          optionContainer.appendChild(optionInput);
+
+          const optionText = document.createTextNode(option.text);
+          optionContainer.appendChild(optionText);
+
+          questionContainer.appendChild(optionContainer);
+        });
+
+        quizContainer.appendChild(questionContainer);
+      });
+
+      const submitButton = document.createElement('button');
+      submitButton.textContent = 'Submit';
+      submitButton.onclick = submitQuiz;
+      quizContainer.appendChild(submitButton);
+
+      const scoreElement = document.createElement('div');
+      scoreElement.id = 'score';
+      quizContainer.appendChild(scoreElement);
+    }
+
+    function submitQuiz() {
+      const questions = document.querySelectorAll('.question');
+      let score = 0;
+
+      questions.forEach((question, index) => {
+        const options = question.querySelectorAll('input[type="radio"]');
+        let answered = false;
+
+        options.forEach(option => {
+          if (option.checked) {
+            answered = true;
+            if (option.dataset.correct === 'true') {
+              score++;
+              question.classList.add('correct');
+            } else {
+              question.classList.add('wrong');
+              const correctOption = question.querySelector('input[data-correct="true"]');
+              correctOption.parentNode.classList.add('correct');
+            }
+          }
+          option.disabled = true;
+        });
+
+        if (!answered) {
+          question.classList.add('wrong');
+          const correctOption = question.querySelector('input[data-correct="true"]');
+          correctOption.parentNode.classList.add('correct');
+        }
+      });
+
+      const scoreElement = document.getElementById('score');
+      scoreElement.textContent = `You scored ${score}/${questions.length}`;
+    }
+
+    generateQuiz();
+  </script>
+</body>
+</html>
